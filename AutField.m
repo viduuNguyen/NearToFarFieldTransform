@@ -69,13 +69,13 @@ classdef AutField
     
     methods(Access=private)
         
-        function [electricFieldX, electricFieldY, electricFieldZ] = computeNearField(self, scanningSurface)
+        function [electricFieldX, electricFieldY, electricFieldZ] = computeNearField(o, scanningSurface)
             % generate electric field at the scanning points
-            [electricField,~] = EHfields(self.antenna, self.frequency, scanningSurface);
+            [electricField,~] = EHfields(o.antenna, o.frequency, scanningSurface);
 
             % reshape electric field components to match grid dimensions
-            pointX = self.nearFieldGrid.pointX;
-            pointY = self.nearFieldGrid.pointY;
+            pointX = o.nearFieldGrid.pointX;
+            pointY = o.nearFieldGrid.pointY;
             electricFieldX = reshape(electricField(1,:),[pointX, pointY]);
             electricFieldY = reshape(electricField(2,:),[pointX, pointY]);
             electricFieldZ = reshape(electricField(3,:),[pointX, pointY]);

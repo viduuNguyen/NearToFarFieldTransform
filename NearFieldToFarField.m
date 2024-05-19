@@ -24,6 +24,10 @@ classdef NearFieldToFarField
         end
 
         function o = setUp(o, nearFieldGrid, farFieldGrid, wavelength, farFieldDistance, fftSizeX, fftSizeY)
+            if (isa(nearFieldGrid, "PlanarGrid") ~= 1 || isa(farFieldGrid, "AngularGrid") ~= 1 )
+                error("Configure wrong type for nearFieldGrid or farFieldGrid");
+            end
+
             % set the instance's attributes
             o.farFieldGrid = farFieldGrid;
             o.nearFieldGrid = nearFieldGrid;
@@ -42,6 +46,26 @@ classdef NearFieldToFarField
             
         end
         
+        function [spectrumX, spectrumY, spectrumZ] = getSpectrum(o, nearFieldX, nearFieldY)
+            % compute wave number components
+            [waveNumberYGrid, waveNumberXGrid] = meshgrid(o.waveNumberY, o.waveNumberX);
+            waveNumberZGrid = sqrt(o.waveNumber^2 - waveNumberXGrid.^2 - waveNumberYGrid.^2); 
+            
+            % compute plane wave spectrum components
+            spectrumX = fftshift(fft2(nearFieldX, o.fftSizeX, o.fftSizeY));
+            spectrumY = fftshift(fft2(nearFieldY, o.fftSizeX, o.fftSizeY));
+            spectrumZ = - (spectrumX.*waveNumberXGrid + spectrumY.*waveNumberYGrid)./waveNumberZGrid;
+        end
+
+        function [farFieldTheta, farFieldPhi] = getFarFieldFromSpectrum(spectrumRectangularX, spectrumRectangularY)
+            % interpolate the spectrum at the far-field scanning grid
+            spectrumAngularX = o.interpolateSpectrum(spectrumRectangularX);
+            spectrumAngularY = o.interpolateSpectrum(spectrumRectangularY);
+
+            % compute the electric far-field angular components
+            [farFieldTheta, farFieldPhi] = o.getFarField(spectrumAngularX, spectrumAngularY);
+        end
+
         function [fieldTheta, fieldPhi] = nf2fft(o, nearFieldX, nearFieldY)
             % compute the plane wave spectrum of the electromagnetic field
             [spectrumRectangularX, spectrumRectangularY, ~] = o.getSpectrum(nearFieldX, nearFieldY);
@@ -49,7 +73,7 @@ classdef NearFieldToFarField
             % interpolate the spectrum at the far-field scanning grid
             spectrumAngularX = o.interpolateSpectrum(spectrumRectangularX);
             spectrumAngularY = o.interpolateSpectrum(spectrumRectangularY);
-
+          
             % compute the electric far-field angular components
             [fieldTheta, fieldPhi] = o.getFarField(spectrumAngularX, spectrumAngularY);
         end
@@ -117,18 +141,7 @@ classdef NearFieldToFarField
 
         end
         
-        function [spectrumX, spectrumY, spectrumZ] = getSpectrum(o, nearFieldX, nearFieldY)
-            
-
-            % compute wave number components
-            [waveNumberYGrid, waveNumberXGrid] = meshgrid(o.waveNumberY, o.waveNumberX);
-            waveNumberZGrid = sqrt(o.waveNumber^2 - waveNumberXGrid.^2 - waveNumberYGrid.^2); 
-            
-            % compute plane wave spectrum components
-            spectrumX = fftshift(fft2(nearFieldX, o.fftSizeX, o.fftSizeY));
-            spectrumY = fftshift(fft2(nearFieldY, o.fftSizeX, o.fftSizeY));
-            spectrumZ = - (spectrumX.*waveNumberXGrid + spectrumY*waveNumberYGrid)./waveNumberZGrid;
-        end
+        
 
         function spectrumAngular = interpolateSpectrum(o, spectrumRectangular)
             X = o.waveNumberX;

@@ -28,7 +28,7 @@ classdef PlanarGrid
             
             % create set of coordinate of sampling points in x- and y-axis
             x_ = -lengthX/2 + o.spaceX/2 : o.spaceX : lengthX/2 - o.spaceX/2;
-            y_ = -lengthY/2 + o.spaceY/2 : o.spaceY : lengthX/2 - o.spaceY/2;
+            y_ = -lengthY/2 + o.spaceY/2 : o.spaceY : lengthY/2 - o.spaceY/2;
             % create meshgrid of sampling points in x- and y-axis
             [o.y, o.x] = meshgrid(y_, x_);
         end
