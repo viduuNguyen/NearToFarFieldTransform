@@ -1,3 +1,9 @@
+% reference:
+% [1] https://uk.mathworks.com/matlabcentral/fileexchange/23385-nf2ff
+% [2] https://uk.mathworks.com/matlabcentral/fileexchange/27876-near-field-to-far-field-transformation?s_tid=FX_rc2_behav
+% [3] http://www.mysimlabs.com/matlab/surfgen/rsgeng2D.m
+
+
 %% clean up the environment
 clc
 clear all;
@@ -72,81 +78,69 @@ end
 
 %% functions
 
-function plotNearField(grid, nearFieldX, nearFieldY)
-    % Define set 
-    x_ = grid.x(:,1);
-    y_ = grid.y(1,:);
+function plotPattern(farFieldgrid, directivityNfffV, directivityNfffH, directivityMatlabV, directivityMatlabH)
 
-    % plot the electric Near-Field components
-    figure("Name","Electric Near-Field components at the scanning plane after parsing");
-    subplot(121);
-    surf(x_, y_, 20*log10(abs(nearFieldX)));
-    xlabel("x (m)");
-    ylabel("y (m)");
-    zlabel("|E_x| (dB)");
-    title("co-polarisation");
-    set(gca,'XLim',[min(x_) max(x_)]);
-    set(gca,'YLim',[min(y_) max(y_)]);
-    shading flat;
-    colorbar;
-
-    subplot(122);
-    surf(x_, y_, 20*log10(abs(nearFieldY)));
-    xlabel("x (m)");
-    ylabel("y (m)");
-    zlabel("|E_y| (dB)");
-    title("cross-polarisation");
-    set(gca,'XLim',[min(x_) max(x_)]);
-    set(gca,'YLim',[min(y_) max(y_)]);
-    shading flat;
-    colorbar;
-end
-
-function plotPattern(farFieldgrid, directivityCo, directivityCross, xDirectivityCo, xDirectivityCross)
-
-    % define the range of the elevation from -pi/2 to pi/2
+    % define the necessary values
     elevation = 180/pi*farFieldgrid.theta(:,1);
+    minDirectivityNfff = min(directivityNfffV);
+    maxDirectivityNfff = max(directivityNfffV);
+    minDirectivityMatlab = min(directivityNfffV);
+    maxDirectivityMatlab = max(directivityNfffV);
+
+    figure();
+    if nargin == 3
+        % compare the directivity of the antenna in two slicing plane (phi=0 and phi=pi/2) by NF2FFT
+        plot(elevation, directivityNfffV, elevation, directivityNfffH);
+        set(gca,'XLim',[-90 90]);
+        set(gca,'YLim',[minDirectivityNfff - 5, maxDirectivityNfff + 5]);
+        xlabel('\theta (Deg)');
+        ylabel(sprintf('Directivity, Dmax = %4.2f dBi', maxDirectivityNfff));
+        title("2D-Slice Pattern of the antenna by NF2FFT");
+        grid;
+        legend('phi = 0 Deg', 'phi = 90 Deg');
+    end
     
-    % compare the directivity of the antenna in two slicing plane (phi=0 and phi=pi/2) by NF2FFT
-    figure("Name","Pattern of the antenna by NF2FFT");
-    plot(elevation, directivityCo, elevation, directivityCross);
-    xlabel('\theta (Deg)');
-    ylabel(sprintf('Directivity, Dmax = %4.2f dBi', max(directivityCo)));
-    set(gca,'XLim',[-50 50]);
-    set(gca,'YLim',[-20 40]);
-    grid;
-    legend('co-planar ', 'cross-planar');
 
     if nargin > 3
-        % compare the directivity of the antenna in two slicing plane (phi=0 and phi=pi/2) by MATLAB antenna toolbox
-        figure("Name","Pattern of the antenna by MATLAB antenna toolbox");
-        plot(elevation, xDirectivityCo, elevation, xDirectivityCross);
-        xlabel('\theta (Deg)');
-        ylabel(sprintf('Directivity, Dmax = %4.2f dBi', max(xDirectivityCo)));
-        set(gca,'XLim',[-50 50]);
-        set(gca,'YLim',[-20 40]);
+        % compare the directivity of the antenna in two slicing plane (phi=0 and phi=pi/2) by NF2FFT
+        directivityNfffPlot = subplot(2,2,1);
+        plot(directivityNfffPlot, elevation, directivityNfffV, elevation, directivityNfffH);
+        ylabel(sprintf('Directivity, Dmax = %4.2f dBi', maxDirectivityNfff));
+        ylim(directivityNfffPlot, [minDirectivityNfff - 5, maxDirectivityNfff + 5]);
+        title("2D-Slice Pattern of the antenna by NF2FFT");
         grid;
-        legend('co-planar ', 'cross-planar');
+        legend('phi = 0 Deg', 'phi = 90 Deg');
+
+        % compare the directivity of the antenna in two slicing plane (phi=0 and phi=pi/2) by MATLAB antenna toolbox
+        directivityMatlabPlot = subplot(2,2,2);
+        plot(directivityMatlabPlot, elevation, directivityMatlabV, elevation, directivityMatlabH);
+        ylabel(sprintf('Directivity, Dmax = %4.2f dBi', maxDirectivityMatlab));
+        ylim(directivityMatlabPlot, [minDirectivityMatlab - 5, maxDirectivityMatlab + 5]);
+        title("2D-Slice Pattern of the antenna by MATLAB antenna toolbox");
+        grid;
+        legend('phi = 0^{\circ}', 'phi = 90^{\circ}');
     
         % compare the directivity of the antenna in elevation cut (phi=0) by NF2FFT and by MATLAB antenna toolbox
-        figure("Name","Pattern of the antenna in co-planar slicing");
-        plot(elevation, directivityCo, elevation, xDirectivityCo);
-        xlabel('\theta (Deg)');
-        ylabel(sprintf('Directivity, Dmax = %4.2f dBi', max(directivityCo)));
-        set(gca,'XLim',[-50 50]);
-        set(gca,'YLim',[-20 40]);
+        directivityVPlot = subplot(2,2,3);
+        plot(directivityVPlot, elevation, directivityNfffV, elevation, directivityMatlabV);
+        ylabel(sprintf('Directivity, Dmax = %4.2f dBi', maxDirectivityNfff));
+        ylim(directivityVPlot, [minDirectivityNfff - 5, maxDirectivityNfff + 5]);
+        title("Pattern of the antenna in the phi = 0^{\circ} plane");
         grid;
         legend('NF2FFT', 'MATLAB antenna toolbox');
 
         % compare the directivity of the antenna in sliding plane (phi=pi/2) by NF2FFT and by MATLAB antenna toolbox
-        figure("Name","Pattern of the antenna in cross-planar slicing");
-        plot(elevation, directivityCross, elevation, xDirectivityCross);
-        xlabel('\theta (Deg)');
-        ylabel(sprintf('Directivity, Dmax = %4.2f dBi', max(directivityCo)));
-        set(gca,'XLim',[-50 50]);
-        set(gca,'YLim',[-20 40]);
+        directivityHPlot = subplot(2,2,4);
+        plot(directivityHPlot, elevation, directivityNfffH, elevation, directivityMatlabH);
+        ylabel(sprintf('Directivity, Dmax = %4.2f dBi', maxDirectivityMatlab));
+        ylim(directivityHPlot, [minDirectivityMatlab - 5, maxDirectivityMatlab + 5]);
+        title("Pattern of the antenna in the phi = 90^{\circ} plane");
         grid;
         legend('NF2FFT', 'MATLAB antenna toolbox');
+        
+        % configure label and limit of the X-axis
+        xlabel([directivityNfffPlot, directivityMatlabPlot, directivityVPlot, directivityHPlot],'\theta (^{\circ})');
+        xlim([directivityNfffPlot, directivityMatlabPlot, directivityVPlot, directivityHPlot],[-90 90]);
 
     end
 end
