@@ -12,11 +12,11 @@ format long;
 
 %% pre-defined constants and options
 speedOfLight = 299792458;
-operatingFrequency = 1.3e9;
+operatingFrequency = 10e9;
 wavelength = speedOfLight / operatingFrequency;
 increaseFactor = 2;
-samplingPointX = 256;
-samplingPointY = 256;
+samplingPointX = 64;
+samplingPointY = 64;
 farFieldGrid = AngularGrid(0.002, 0.002);
 GENERATE_AUT_DATA = 1;
 farField = NearFieldToFarField;
@@ -28,32 +28,66 @@ radius = 1.8;
 focalLengthOverDiameter = 0.4;
 focalLength = focalLengthOverDiameter*2*radius;
 
+%% parameters of the open-ended rectangular waveguide
+% standard: WR-90
+guideWidth = 22.86e-3;
+guideHeight = 10.16e-3;
+
+%% parameters of the horn antenna
+% type:  PM7320x
+flareLength = 130e-3;
+flareWidth = 75e-3;
+flareHeight = 50e-3;
+
 %% 1. generate near-field data or parse the data files
 
 if GENERATE_AUT_DATA == 1
-    % define near-field scanning grid
-    nearFieldGrid = PlanarGrid(samplingPointX, samplingPointY, 16*radius, 16*radius);
-
     % define parabolic antenna and relevant quantities
-    ant = reflectorParabolic("Radius", radius, "FocalLength", focalLength);
-    antennaDepth = focalLength - (4*focalLength^2 - radius^2) / (4*focalLength);
-    fresnelDistance = 0.62 * sqrt(8*radius^3 / wavelength);
-    fraunhoferDistance = 2*(2*radius)^2/wavelength;
-    scanningDistance = antennaDepth + fresnelDistance;
-    
+%     parabolicAntenna = reflectorParabolic("Radius", radius, "FocalLength", focalLength);
+%     antennaDepth = focalLength - (4*focalLength^2 - radius^2) / (4*focalLength);
+%     fresnelDistance = 0.62 * sqrt(8*radius^3 / wavelength);
+%     fraunhoferDistance = 2*(2*radius)^2/wavelength;
+%     scanningDistance = antennaDepth + fresnelDistance;
+%     nearFieldGrid = PlanarGrid(samplingPointX, samplingPointY, 16*radius, 16*radius);
+
+    % define horn antenna
+    hornAntenna = design(horn, operatingFrequency);
+    hornAntenna.Height = guideHeight;
+    hornAntenna.Width = guideWidth;
+    hornAntenna.FlareLength = flareLength;
+    hornAntenna.FlareWidth = flareWidth;
+    hornAntenna.FlareHeight = flareHeight;
+    hornAntenna.Tilt = [-90, 180];
+    hornAntenna.TiltAxis = [0 1 0; 0 0 1];
+
+    fresnelDistance = 0.62 * sqrt(flareWidth^3 / wavelength);
+    fraunhoferDistance = 2 * (flareWidth)^2 / wavelength;
+    scanningDistance = 0.5*hornAntenna.Length + flareLength + fresnelDistance;
+    nearFieldGrid = PlanarGrid(samplingPointX, samplingPointY, 0.3, 0.3);
+
     % generate near-field components
-    aut = AutField(ant, operatingFrequency, nearFieldGrid, farFieldGrid, scanningDistance);
+    aut = AutField(hornAntenna, operatingFrequency, nearFieldGrid, farFieldGrid, scanningDistance);
     [nearFieldX, nearFieldY, ~] = aut.getNearField();
     [xDirectivityX_dBi, xDirectivityY_dBi] = aut.getDirectivity_dBi();
 
     % plot near-field components
-    plotNearField(nearFieldGrid, nearFieldX, nearFieldY);
+    [fieldFigure, verticalFieldPlot, horizontalFieldPlot] = plotPolarisation(nearFieldGrid.x, nearFieldGrid.y, nearFieldX, nearFieldY);
 
 else
     [nearFieldX, nearFieldY, nearFieldGrid] = farField.parseNearFieldFiles(fileNameX, fileNameY);
     % plot near-field components
-    plotNearField(nearFieldGrid, nearFieldX, nearFieldY);
+    [fieldFigure, verticalFieldPlot, horizontalFieldPlot] = plotPolarisation(nearFieldGrid.x, nearFieldGrid.y, nearFieldX, nearFieldY);
 end
+
+set(fieldFigure, "Name", "vertical and horizontal polarisation of electrical Near-Field at the scanning plane");
+xlabel([verticalFieldPlot, horizontalFieldPlot], "x(m)");
+ylabel([verticalFieldPlot, horizontalFieldPlot], "y(m)");
+zlabel(verticalFieldPlot, "E_x (dB)");
+zlabel(horizontalFieldPlot, "E_y(dB)");
+title(verticalFieldPlot, "vertical polarisation");
+title(horizontalFieldPlot, "horizontal polarisation");
+
+
 
 %% 2. implement near-field to far-field transformation
 % 2a. increase the resolution of the FFT by adding more sampling points
