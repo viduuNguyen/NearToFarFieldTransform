@@ -4,16 +4,13 @@ function obj = computeSpectrum(obj)
     spectrumX = fftshift(fft2(obj.nearField.X, obj.fftSizeX, obj.fftSizeY));
     spectrumY = fftshift(fft2(obj.nearField.Y, obj.fftSizeX, obj.fftSizeY));
     
-    disp("spectrumX, spectrumY");
-    size(spectrumX), size(spectrumY)
-    
     % compute indices of the near-field grid
     indexX = -obj.fftSizeX/2 : obj.fftSizeX/2 - 1;
     indexY = -obj.fftSizeY/2 : obj.fftSizeY/2 - 1;
     
     % compute the grid space between adjacent points
-    spaceX = abs(obj.nearField.x(1,1) - obj.nearField.x(2,1));
-    spaceY = abs(obj.nearField.y(1,1) - obj.nearField.y(1,2));
+    spaceX = abs(obj.nearField.xGrid(1,1) - obj.nearField.xGrid(2,1));
+    spaceY = abs(obj.nearField.yGrid(1,1) - obj.nearField.yGrid(1,2));
     
     % compute wave-number components in x- and y-coordinate
     waveNumberX = 2*pi*indexX/(obj.fftSizeX*spaceX);
@@ -24,10 +21,9 @@ function obj = computeSpectrum(obj)
     obj.spectrum = MeshgridQuantity(waveNumberXGrid, ...
                                     waveNumberYGrid, ...
                                     spectrumX,       ...
-                                    spectrumY);
-    
-    size(obj.spectrum.X)
-                                    
+                                    spectrumY,       ...
+                                    "20log");
+                                   
     % re-compute the wave-number components w.r.t theta- and phi-coordinate
     interpWaveNumberX = obj.waveNumber * sin(obj.farFieldGrid.theta) .* ...
                         cos(obj.farFieldGrid.phi);
@@ -52,5 +48,6 @@ function obj = computeSpectrum(obj)
     obj.interpSpectrum = MeshgridQuantity(interpWaveNumberX, ...
                                           interpWaveNumberY, ...
                                           interpSpectrumX,   ...
-                                          interpSpectrumY);
+                                          interpSpectrumY,   ...
+                                          "20log");
 end

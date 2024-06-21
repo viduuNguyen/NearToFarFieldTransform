@@ -10,6 +10,8 @@ function nearField = parseNearFieldFiles(obj, fileNameX, fileNameY)
         nearField MeshgridQuantity
     end
     
+    error("update required");
+
     % load data files
     dataX = load(fileNameX);
     dataY = load(fileNameY);
@@ -20,5 +22,5 @@ function nearField = parseNearFieldFiles(obj, fileNameX, fileNameY)
     fieldY = obj.getNearField(grid, dataY);
     
     % return near-field
-    nearField = MeshgridQuantity(grid.x, grid.y, fieldX, fieldY);
+    nearField = MeshgridQuantity(grid.x, grid.y, fieldX, fieldY, "20log");
 end

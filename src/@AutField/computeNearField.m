@@ -10,7 +10,6 @@ function obj = computeNearField(obj)
     xGrid = obj.nearFieldGrid.x;
     yGrid = obj.nearFieldGrid.y;
     zGrid = ones(size(obj.nearFieldGrid.x)) * obj.scanningDistance;
-    size(xGrid), size(yGrid), size(zGrid)
     scanningSurface = [xGrid(:)';yGrid(:)';zGrid(:)'];
     
     % generate electric field at the scanning points
@@ -21,5 +20,5 @@ function obj = computeNearField(obj)
     fieldX = reshape(field(1,:), dimension);
     fieldY = reshape(field(2,:), dimension);
     
-    obj.nearField = MeshgridQuantity(xGrid, yGrid, fieldX, fieldY);
+    obj.nearField = MeshgridQuantity(xGrid, yGrid, fieldX, fieldY, "20log");
 end

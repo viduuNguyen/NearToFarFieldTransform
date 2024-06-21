@@ -1,11 +1,10 @@
-function singlePlot(obj, ax, scale)
+function singlePlot(obj, ax)
     arguments
        obj VectorQuantity 
        ax
-       scale (1,1) string = "linear"
     end
     
-    switch scale
+    switch obj.scale
         case "linear"
             y = obj.y;
         case "10log"

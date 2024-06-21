@@ -1,27 +1,27 @@
-function obj = computeFarField(obj)
-    
-    arguments(Input)
-        obj OerwgField  
+function farField = computeFarField(waveNumber, width, height, distance, thetaGrid, phiGrid)
+   
+    arguments(Output)
+        farField MeshgridQuantity 
     end
     
-    X = 0.5 * obj.waveNumber * obj.width .* sin(obj.grid.theta) .* cos(obj.grid.phi);
+    X = 0.5 * waveNumber * width * sin(thetaGrid) .* cos(phiGrid);
     
-    Y = 0.5 * obj.waveNumber * obj.height .* sin(obj.grid.theta) .* sin(obj.grid.phi);
+    Y = 0.5 * waveNumber * height * sin(thetaGrid) .* sin(phiGrid);
     
-    C = j*(obj.width * obj.height * obj.waveNumber * ...
-        exp(-j*obj.waveNumber*obj.distance)) / (2*pi*obj.distance);
+    C = 1j*(width * height * waveNumber * exp(-1j*waveNumber*distance)) / (2 *pi*distance);
     
     term       = cos(X) ./ (X.^2 - (pi/2)^2) .* sin(Y) ./ Y;
-    fieldTheta = -(pi/2) * C * sin(obj.grid.phi) .* term;
-    fieldPhi   = - (pi/2) * C * cos(obj.grid.theta) * cos(obj.grid.phi) .* term;
+    fieldTheta = -(pi/2) * C * sin(phiGrid) .* term;
+    fieldPhi   = -(pi/2) * C * cos(thetaGrid) .* cos(phiGrid) .* term;
     
     % meshgrid of data points in x- and y- coordinate
-    x_ = obj.distance .* sin(obj.grid.theta) .* cos(obj.grid.phi);
-    y_ = obj.distance .* sin(obj.grid.theta) .* sin(obj.grid.phi);
+    xGrid = distance .* sin(thetaGrid) .* cos(phiGrid);
+    yGrid = distance .* sin(thetaGrid) .* sin(phiGrid);
     
-    obj.farField = MeshgridQuantity(x_,         ...
-                                    y_,         ...
-                                    fieldTheta, ...
-                                    fieldPhi);
+    farField = MeshgridQuantity(xGrid,      ...
+                                yGrid,      ...
+                                fieldTheta, ...
+                                fieldPhi,   ...
+                                "20log");
                                 
 end

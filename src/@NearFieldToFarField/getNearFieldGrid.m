@@ -1,7 +1,7 @@
 function grid = getNearFieldGrid(dataX, dataY)
     % find set of coordinate of sampling points in x- and y-coordinate
     x_ = unique(dataX(:,1));
-    y_ = unique(dataY(:,2));
+    y_ = unique(dataX(:,2));
     
     % find number of sampling points in each coordinate
     pointX = length(x_);

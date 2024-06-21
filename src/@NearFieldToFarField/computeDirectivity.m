@@ -1,11 +1,13 @@
-function obj = computeDirectivity(obj)
+function [directivityX, directivityY] = computeDirectivity(obj, farFieldX, farFieldY)
     % compute the directivity in xz and yz planes and store in obj.directivityX / Y
     arguments
-        obj NearFieldToFarField 
+        obj       NearFieldToFarField 
+        farFieldX
+        farFieldY
     end
     
     % compute the (effective) energy intensity
-    intensity = abs(obj.farField.X).^2 + abs(obj.farField.Y).^2;
+    intensity = abs(farFieldX).^2 + abs(farFieldY).^2;
 
     power = computePower(intensity, obj.farFieldGrid);
 
@@ -19,11 +21,10 @@ function obj = computeDirectivity(obj)
     phiIndex90 = floor(phiIndex180/2);
     elevation_degree = 90 - 180/pi * obj.farFieldGrid.theta(:,1);
     
-    obj.directivityX = VectorQuantity(elevation_degree,directivity(:,phiIndex0));
+    directivityX = VectorQuantity(elevation_degree,directivity(:,phiIndex0), "10log");
     % cross-polarisation plane phi = pi/2
-    obj.directivityY = VectorQuantity(elevation_degree,directivity(:,phiIndex90));
-    
-    
+    directivityY = VectorQuantity(elevation_degree,directivity(:,phiIndex90), "10log");
+     
 end
 
 function power = computePower(intensity, grid)
@@ -58,5 +59,5 @@ function power = computePower(intensity, grid)
     % compute the double summation
     % term of the summation
     term = intensity .* (thetaCoefficient' * phiCoefficient) .* sin(grid.theta);
-    power = 1/9 * spaceTheta * spacePhi * sum(sum(term));
+    power = 1/9 * spaceTheta * spacePhi * sum(sum(abs(term)));
 end

@@ -7,14 +7,12 @@ classdef AutField
         antenna                                            % antenna object
         scanningDistance (1,1) double {mustBePositive} = 1 % distance between the scanning plane and the antenna
         
-        directivityX     VectorQuantity                    % directivity in xz plane
-        directivityY     VectorQuantity                    % directivity in yz plane
-        
-        
     end
     
-    properties(Access=public)
+    properties(GetAccess=public, SetAccess=private)
         nearField        MeshgridQuantity                  % electric near-field in x and y coordinate
+        directivityX     VectorQuantity                    % directivity in xz plane
+        directivityY     VectorQuantity                    % directivity in yz plane
     end
 
     methods (Access=public)
@@ -47,10 +45,13 @@ classdef AutField
         generateNearFieldFiles(obj, fileNameX, fileNameY)
         
         % display directivity
-        displayDirectivity(obj)
+        [f, ax] = displayDirectivity(obj, viewAngle)
         
-        % display the Near-Field
-        displayNearField(obj)
+        % display the magnitude of Near-Field
+        [f, ax] = displayNearField(obj, viewAngle)
+
+        % display the phase of Near-Field
+        [f, ax] = displayNearFieldPhase(obj, viewAngle)
 
     end
     
