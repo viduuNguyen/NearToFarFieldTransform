@@ -7,7 +7,7 @@ format long;
 %% define constants
 disp("define constants");
 SPEED_OF_LIGHT = 299792458;
-FREQUENCY = 12e9;
+FREQUENCY = 10e9;
 WAVELENGTH = SPEED_OF_LIGHT / FREQUENCY;
 
 %% parameters of the open-ended rectangular waveguide
@@ -43,11 +43,11 @@ disp("define scanning grids");
 SAMPLING_POINT_X    = 32;
 SAMPLING_POINT_Y    = SAMPLING_POINT_X;
 INCREASE_FACTOR     = 0;
-LENGTH_X            = 1.24e-2 * SAMPLING_POINT_X;
+LENGTH_X            = 1e-2 * SAMPLING_POINT_X;
 LENGTH_Y            = LENGTH_X;
 
 nfGrid = PlanarGrid(SAMPLING_POINT_X, SAMPLING_POINT_Y, LENGTH_X, LENGTH_Y);
-ffGrid = AngularGrid(0.005);
+ffGrid = AngularGrid(0.002);
 
 %% generate near-field data
 disp("generate near-field data using AutField");
@@ -62,12 +62,12 @@ FFT_SIZE_X = 2^(ceil(log2(SAMPLING_POINT_X)) + INCREASE_FACTOR);
 FFT_SIZE_Y = FFT_SIZE_X;
 
 nf2ffObj = setUp(nf2ffObj, nearField, ffGrid, WAVELENGTH, 10*FRAUNHOFER_DISTANCE, FFT_SIZE_X, FFT_SIZE_Y);
-displayNearField(nf2ffObj, [90, 0]);
-displayNearFieldPhase(nf2ffObj);
+% displayNearField(nf2ffObj, [90, 0]);
+% displayNearFieldPhase(nf2ffObj);
 
 disp("implement nf2fft using NearFieldToFarField");
 nf2ffObj = nf2fft(nf2ffObj, "normal");
-displayInterpSpectrum(nf2ffObj, [90, 0]);
+% displayInterpSpectrum(nf2ffObj, [90, 0]);
 
 comparison_result = figure(Name="Horn antenna - 32x32 scanning grid with half-wavelength scanning space");
 ax(1) = subplot(1,2,1);

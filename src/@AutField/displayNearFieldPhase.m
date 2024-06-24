@@ -16,4 +16,9 @@ function [f, ax] = displayNearFieldPhase(obj, viewAngle)
                                      angle(obj.nearField.Y), ...
                                      "signed");
     surface(phaseMeshgrid, xAxis, yAxis, viewAngle);
+    xlabel([xAxis, yAxis], "x (m)");
+    ylabel([xAxis, yAxis], "y (m)");
+    zlabel([xAxis, yAxis], "Phase of the Near-Field (radian)");
+    title(xAxis, "Co-Polar Near-Field");
+    title(yAxis, "Cross-Polar Near-Field");
 end

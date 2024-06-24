@@ -50,30 +50,30 @@ LENGTH_Y         = LENGTH_X;
 INCREASE_FACTOR  = 0;
 
 nfGrid = PlanarGrid(SAMPLING_POINT_X, SAMPLING_POINT_Y, LENGTH_X, LENGTH_Y);
-ffGrid = AngularGrid(0.002);
+ffGrid = AngularGrid(0.005);
 
 %% generate near-field data
 disp("generate near-field data using AutField");
 hornAntField = AutField(hornAnt, FREQUENCY, nfGrid, ffGrid, SCANNING_DISTANCE);
 
-% displayNearField(hornAntField);
-% displayNearFieldPhase(hornAntField);
+displayNearField(hornAntField, [30, 60]);
+displayNearFieldPhase(hornAntField);
 
 load("../Result/NF2FF/lab/coPolar_32.mat");
-xGrid = xCor/100;
-yGrid = yCor/100;
+xGrid = xCor'/100;
+yGrid = yCor'/100;
 magnitudeX_dB = mag;
-magnitudeX = 10.^(magnitudeX_dB / 10);
+magnitudeX = 10.^(magnitudeX_dB / 20);
 phaseX = phase;
 clear("xCor", "yCor", "mag", "phase");
 load("../Result/NF2FF/lab/crossPolar_32.mat");
 magnitudeY_dB = mag;
-magnitudeY = 10.^(magnitudeY_dB / 10);
+magnitudeY = 10.^(magnitudeY_dB / 20);
+% magnitudeY = zeros(32,32);
 phaseY = phase;
 
-phasorX = magnitudeX .* exp(1j * phaseX * 2 * pi / 180);
-phasorY = magnitudeY .* exp(1j * phaseY * 2 * pi / 180);
-
+phasorX = magnitudeX .* exp(1j * deg2rad(phaseX));
+phasorY = magnitudeY .* exp(1j * deg2rad(phaseY));
 disp("implement nf2fft using Main");
 
 main = Main();

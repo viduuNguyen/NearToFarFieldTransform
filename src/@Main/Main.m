@@ -47,10 +47,10 @@ classdef Main
 
             nf2ffObj = nf2fft(nf2ffObj, "both", probeAnt);
 
-            displayNearField(nf2ffObj);
+            displayNearField(nf2ffObj, [30, 60]);
             displayNearFieldPhase(nf2ffObj);
-            displaySpectrum(nf2ffObj);
-            displayInterpSpectrum(nf2ffObj);
+%             displaySpectrum(nf2ffObj);
+            displayInterpSpectrum(nf2ffObj, [30, 60]);
 
             figure(Name="Pattern comparison")
             ax(1) = subplot(1,2,1);

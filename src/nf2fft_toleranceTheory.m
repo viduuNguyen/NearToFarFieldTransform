@@ -50,7 +50,7 @@ farField = farField.setUp(scanningGrid, farFieldGrid, WAVELENGTH, 10*FRAUNHOFER_
 
 [directivityX_dBi, ~] = farField.getDirectivity_dBi(fieldTheta, fieldPhi);
 
-directivityIdeal_dBi = max(directivityX_dBi)
+directivityIdeal_dBi = max(directivityX_dBi);
 
 %% errornous case
 for i = errorRatio
@@ -71,7 +71,7 @@ for i = errorRatio
         
         [directivityX_dBi, ~] = farField.getDirectivity_dBi(fieldTheta, fieldPhi);
         
-        directivityError_dBi(j,i) = max(directivityX_dBi)
+        directivityError_dBi(j,i) = max(directivityX_dBi);
     end
 
 end
