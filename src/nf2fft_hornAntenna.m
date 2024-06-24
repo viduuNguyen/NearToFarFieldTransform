@@ -1,8 +1,5 @@
 %% clean up the environment
-clc
-clear variables;
-close all;
-format long;
+clc; clear variables; close all; format long;
 
 %% define constants
 disp("define constants");

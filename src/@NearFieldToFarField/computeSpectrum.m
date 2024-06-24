@@ -1,3 +1,31 @@
+% computeSpectrum(obj)
+%
+% Computes the spectrum components for the given NearFieldToFarField object
+% and stores the results in obj.spectrum and obj.interpSpectrum.
+%
+% Input arguments:
+%   obj - Instance of the NearFieldToFarField class.
+%
+% Output:
+%   No direct output. The computed spectrum components are stored in the
+%   obj.spectrum and obj.interpSpectrum properties of the input object.
+%
+% Details:
+%   This function computes the spectrum components from the near-field data
+%   stored in obj.nearField. It computes the spectrum in rectangular coordinates
+%   (spectrumX and spectrumY) using FFT and FFT shift operations. It then computes
+%   the wave-number components in x and y coordinates and creates a MeshgridQuantity
+%   object (obj.spectrum) to store these components.
+%
+%   It also computes the wave-number components with respect to theta and phi
+%   coordinates for far-field interpolation. Using these components, it interpolates
+%   the spectrum components from rectangular to angular coordinates (interpSpectrumX
+%   and interpSpectrumY) using spline interpolation. These interpolated components
+%   are stored in obj.interpSpectrum as a MeshgridQuantity object.
+%
+% See also: NearFieldToFarField, MeshgridQuantity.
+
+
 function obj = computeSpectrum(obj)
     
     % compute plane wave spectrum components

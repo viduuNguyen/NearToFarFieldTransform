@@ -1,3 +1,32 @@
+% computeCorrFarField(obj, probeAntenna)
+%
+% Computes the corrected far-field components with probe correction using
+% the provided probe antenna.
+%
+% Input arguments:
+%   obj          - Instance of the NearFieldToFarField class.
+%   probeAntenna - Antenna object representing the probe used for correction.
+%
+% Output:
+%   obj - Updated instance of NearFieldToFarField with the corrected far-field
+%         components stored in obj.corrFarField.
+%
+% Details:
+%   This function computes the corrected far-field components for both
+%   vertical and horizontal polarizations based on the provided probeAntenna.
+%   It uses the far-field components (fieldVTheta, fieldVPhi, fieldHTheta,
+%   fieldHPhi) from the probeAntenna and the interpolated spectrum components
+%   (spectrumV, spectrumH) from obj.interpSpectrum to compute the corrected
+%   far-field components (fieldTheta, fieldPhi) for the instance obj.
+%
+%   The computation involves:
+%   - Determinant calculation.
+%   - Spectrum calculation at the far-field distance.
+%   - Computing corrected fieldTheta and fieldPhi using the determinant,
+%     spectrumTheta, spectrumPhi, and far-field components from the probeAntenna.
+%
+% See also: NearFieldToFarField, MeshgridQuantity
+
 function obj = computeCorrFarField(obj, probeAntenna)
     
     arguments 

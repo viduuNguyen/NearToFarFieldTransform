@@ -1,3 +1,30 @@
+% Main class for Near-Field to Far-Field transformation simulation.
+%
+% Properties (Public):
+%   xGrid - X-coordinate sampling grid for Near-Field.
+%   yGrid - Y-coordinate sampling grid for Near-Field.
+%   phasorX - Phasor data corresponding to xGrid.
+%   phasorY - Phasor data corresponding to yGrid.
+%   frequency - Frequency of the signal.
+%
+% Properties (Public, GetAccess):
+%   directivityX - Directivity in the X direction without probe correction.
+%   directivityY - Directivity in the Y direction without probe correction.
+%   corrDirectivityX - Directivity in the X direction with probe correction.
+%   corrDirectivityY - Directivity in the Y direction with probe correction.
+%
+% Properties:
+%   farFieldGridSpace - Grid space in radians for Far-Field angular grid (default: 0.005).
+%   interpolationFactor - Power of base 2 for zero-padding elements (default: 0).
+%
+% Methods:
+%   Transform - Performs the Near-Field to Far-Field transformation using NF2FFT algorithm.
+%
+% Example Usage:
+%   % Create Main instance and perform transformation
+%   mainObj = Main();
+%   mainObj.Transform();
+
 classdef Main
     properties (Access=public)
         %% Near-Field data

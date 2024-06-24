@@ -1,3 +1,26 @@
+% computeNearField - Compute the electric near-field components for the antenna under test (AUT).
+%
+%   obj = computeNearField(obj)
+%
+%   Inputs:
+%       obj - AutField object.
+%
+%   Outputs:
+%       obj - Updated AutField object with electric near-field computed and stored in obj.nearField.
+%
+%   This method constructs a scanning surface based on the near-field grid
+%   coordinates, generates the electric field at these points using the antenna's
+%   EHfields function, reshapes the field data to match the grid dimensions, and
+%   stores the computed near-field as a MeshgridQuantity object.
+%
+%   Dependencies:
+%       EHfields        - Antenna Toolbox function used to compute electric and
+%                         magnetic fields of the antenna.
+%       MeshgridQuantity - Custom class representing meshgrid quantities (included in this code).
+%
+%   See also: EHfields, MeshgridQuantity.
+
+
 function obj = computeNearField(obj)
     % compute the Near-Field and store in attribute obj.nearField
     

@@ -1,3 +1,28 @@
+% displaySpectrum(obj, viewAngle)
+%
+% Displays the spectrum components in x- and y-coordinates of the NearFieldToFarField
+% object in a surface plot. The plot shows the spectrum stored in obj.spectrum in two
+% subplots, xAxis and yAxis.
+%
+% Input arguments:
+%   obj       - Instance of the NearFieldToFarField class.
+%   viewAngle - Optional argument specifying the viewing angles for the surface plot.
+%               Default is [0, 90].
+%
+% Output:
+%   f   - Figure handle of the plotted figure.
+%   ax  - Axes handles of the subplots (xAxis and yAxis).
+%
+% Details:
+%   The function creates a figure with the Name "Spectrum components in x- and y-coordinate".
+%   It sets up two subplots, xAxis and yAxis. It plots the spectrum stored in obj.spectrum
+%   using the surface function. The xlabel, ylabel, and zlabel indicate the wavenumber
+%   component X, wavenumber component Y, and spectrum (in dB) respectively. Titles for xAxis
+%   and yAxis indicate "Co-Polar wave spectrum" and "Cross-Polar wave spectrum" respectively.
+%
+% See also: NearFieldToFarField, surface.
+
+
 function [f, ax] = displaySpectrum(obj, viewAngle)
     
     arguments

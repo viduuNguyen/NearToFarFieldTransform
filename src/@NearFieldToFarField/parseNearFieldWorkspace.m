@@ -1,3 +1,38 @@
+% parseNearFieldWorkspace(obj, xGrid, yGrid, phasorX, phasorY)
+%
+% Parses near-field data from workspace variables and returns it as a MeshgridQuantity object.
+%
+% Input arguments:
+%   obj - Instance of NearFieldToFarField class
+%   xGrid - Matrix representing x-coordinates of the sampling points
+%   yGrid - Matrix representing y-coordinates of the sampling points
+%   phasorX - Matrix representing the X component of the complex phasor values
+%   phasorY - Matrix representing the Y component of the complex phasor values
+%
+% Output:
+%   nearField - MeshgridQuantity object containing parsed near-field data
+%
+% Details:
+%   This function constructs a scanning grid based on the provided xGrid and yGrid matrices,
+%   maps the complex phasor data (phasorX and phasorY) onto this grid, aligns the maximum
+%   of the beam to the center of the grid, and returns a MeshgridQuantity object containing
+%   the grid coordinates and mapped field data with logarithmic scaling ("20log").
+%
+% Example:
+%   % Create an instance of NearFieldToFarField class
+%   obj = NearFieldToFarField();
+%
+%   % Assume xGrid, yGrid, phasorX, and phasorY are loaded from workspace
+%
+%   % Parse near-field data from workspace variables
+%   nearField = obj.parseNearFieldWorkspace(xGrid, yGrid, phasorX, phasorY);
+%
+%   % Display the parsed near-field data
+%   [f, ax] = nearField.display();
+%
+% See also: NearFieldToFarField, MeshgridQuantity
+
+
 function nearField = parseNearFieldWorkspace(obj, xGrid, yGrid, phasorX, phasorY)
     arguments(Input)
         obj       NearFieldToFarField

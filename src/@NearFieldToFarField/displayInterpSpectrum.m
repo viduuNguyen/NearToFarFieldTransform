@@ -1,3 +1,29 @@
+% displayInterpSpectrum(obj, viewAngle)
+%
+% Displays the interpolated spectrum components of the NearFieldToFarField object
+% in a surface plot with normalized electric Far-Field. It plots the interpolated
+% spectrum components obj.interpSpectrum in two subplots, xAxis and yAxis.
+%
+% Input arguments:
+%   obj       - Instance of the NearFieldToFarField class.
+%   viewAngle - Optional argument specifying the viewing angles for the surface plot.
+%               Default is [0, 90].
+%
+% Output:
+%   f   - Figure handle of the plotted figure.
+%   ax  - Axes handles of the subplots (xAxis and yAxis).
+%
+% Details:
+%   The function creates a figure with the Name "Interpolated spectrum components
+%   in x- and y-coordinate". It sets up two subplots, xAxis and yAxis, and plots
+%   the interpolated spectrum components stored in obj.interpSpectrum using the
+%   surface function. The xlabel, ylabel, and zlabel indicate the x, y, and
+%   spectrum (dB) respectively. Titles for xAxis and yAxis indicate "Co-Polar
+%   wave spectrum" and "Cross-Polar wave spectrum" respectively.
+%
+% See also: NearFieldToFarField, surface.
+
+
 function [f, ax] = displayInterpSpectrum(obj, viewAngle)
     
     arguments(Input)

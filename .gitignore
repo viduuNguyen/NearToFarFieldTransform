@@ -1,3 +1,6 @@
 # List of untracked files to ignore
 *.txt
 *.asv
+
+!.gitignore
+!LICENSE.txt

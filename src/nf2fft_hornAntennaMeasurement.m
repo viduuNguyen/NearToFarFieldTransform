@@ -1,9 +1,3 @@
-% reference:
-% [1] https://uk.mathworks.com/matlabcentral/fileexchange/23385-nf2ff
-% [2] https://uk.mathworks.com/matlabcentral/fileexchange/27876-near-field-to-far-field-transformation?s_tid=FX_rc2_behav
-% [3] http://www.mysimlabs.com/matlab/surfgen/rsgeng2D.m
-
-
 %% clean up the environment
 clc; clear variables; close all; format long;
 
@@ -86,7 +80,7 @@ main.frequency = FREQUENCY;
 
 main = main.Transform();
 
-comparison_result = figure(Name="Horn antenna - 32x32 scanning grid with half-wavelength scanning space");
+result_comparison = figure(Name="Horn antenna - 32x32 scanning grid with half-wavelength scanning space");
 ax(1) = subplot(1,2,1);
 VectorQuantity.multiplePlot([hornAntField.directivityX, main.corrDirectivityX, main.directivityX], ax(1));
 legend(ax(1), "MATLAB", "NF2FFT With Probe Correction", "Nf2FF Without Probe Correction", Location="south");

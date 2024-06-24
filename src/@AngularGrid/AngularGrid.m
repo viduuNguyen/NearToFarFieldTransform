@@ -1,3 +1,15 @@
+% AngularGrid Class
+%
+% This class represents a grid in spherical coordinates, specifically
+% defining a meshgrid in theta and phi coordinates. The grid is used
+% to sample points in a spherical coordinate system.
+%
+% Properties:
+%    theta - A matrix of theta values (in radians) for the meshgrid.
+%            The theta values range from -pi/2 to pi/2, excluding the boundaries.
+%    phi   - A matrix of phi values (in radians) for the meshgrid.
+%            The phi values range
+
 classdef AngularGrid
 
     properties(GetAccess=public, SetAccess=private)

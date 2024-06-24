@@ -1,3 +1,30 @@
+% computeDirectivity(obj, farFieldX, farFieldY)
+%
+% Computes the directivity in xz and yz planes for the given far-field components
+% farFieldX and farFieldY, and stores the results in obj.directivityX and obj.directivityY.
+%
+% Input arguments:
+%   obj        - Instance of the NearFieldToFarField class.
+%   farFieldX  - Far-field component in the x-direction.
+%   farFieldY  - Far-field component in the y-direction.
+%
+% Output:
+%   directivityX - VectorQuantity object representing the directivity in the xz plane.
+%   directivityY - VectorQuantity object representing the directivity in the yz plane.
+%
+% Details:
+%   This function computes the directivity of the antenna from the provided
+%   far-field components in the x and y directions. It first calculates the
+%   intensity (magnitude squared) of the far-field components. Then, using
+%   numerical integration (computePower function), it computes the total power
+%   radiated by the antenna. Finally, it computes the directivity in both
+%   co-polarization (phi = 0) and cross-polarization (phi = pi/2) planes.
+%   The results are stored as VectorQuantity objects in obj.directivityX and
+%   obj.directivityY, respectively, in units of 10*log10.
+%
+% See also: NearFieldToFarField, VectorQuantity, computePower.
+
+
 function [directivityX, directivityY] = computeDirectivity(obj, farFieldX, farFieldY)
     % compute the directivity in xz and yz planes and store in obj.directivityX / Y
     arguments

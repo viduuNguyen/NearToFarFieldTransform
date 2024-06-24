@@ -1,3 +1,30 @@
+% getRandomRoughSurface - Generate a random rough surface for the imperfect parabolic reflector.
+%
+%   errorSurface = getRandomRoughSurface(obj)
+%
+%   Inputs:
+%       obj - ImperfectParabolicReflector object.
+%
+%   Outputs:
+%       errorSurface - Generated random rough surface as a matrix.
+%
+%   This function generates a random rough surface to simulate imperfections
+%   on the parabolic reflector. It uses parameters such as RMS error (obj.rmsError)
+%   and correlation length (obj.correlationLength) to create an uncorrelated
+%   random error surface, which is then filtered using a Gaussian filter to
+%   introduce correlation among the errors. The resulting error surface is
+%   normalized and returned as output.
+%
+%   Notes:
+%   - The size and resolution of the surface are determined by the dimensions
+%     of obj.nearFieldGrid.x and obj.nearFieldGrid.y.
+%
+%   Dependencies:
+%       ImperfectParabolicReflector - Parent class containing reflector parameters.
+%
+%   See also: ImperfectParabolicReflector.
+
+
 function errorSurface = getRandomRoughSurface(obj)
     arguments
         obj ImperfectParabolicReflector
@@ -18,11 +45,3 @@ function errorSurface = getRandomRoughSurface(obj)
     errorSurface = normFactor*(ifft2(fft2(uncorrelatedSurface) .* fft2(gaussianFilter)));
     
 end
-
-
-%         function correlatedRoughSurface = getRandomRoughSurface(o)
-%             uncorrelatedRoughSurface = o.rmsError*randn(o.nearFieldGrid.pointX, o.nearFieldGrid.pointY);
-%              gaussianFilter = exp(-(abs(o.nearFieldGrid.x) + abs(o.nearFieldGrid.y))/(o.correlationLength/2));
-%             normalisingFactor = 2 * o.nearFieldGrid.lengthX / (o.nearFieldGrid.pointX * o.correlationLength);
-%             correlatedRoughSurface = normalisingFactor * ifft2(fft2(uncorrelatedRoughSurface) .* fft2(gaussianFilter));
-%         end
